@@ -163,12 +163,16 @@ class AddTaskPage extends StatelessWidget {
   }
 }
 
-class _TodoItemState extends State<TodoItem> {
+class TodoItem extends StatelessWidget {
+  const TodoItem({super.key, required this.todo, required this.onDelete});
+  final Todo todo;
+  final VoidCallback onDelete;
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
-        title: Text(widget.todo.title),
-        subtitle: Text(widget.todo.description),
+        title: Text(todo.title),
+        subtitle: Text(todo.description),
         leading: Checkbox(
           value: false,
           onChanged: (bool? value) {},
@@ -177,20 +181,10 @@ class _TodoItemState extends State<TodoItem> {
           icon: const Icon(Icons.delete),
           onPressed: () {
             //_todos.remove(widget.todo);
-            setState(() {
-              _todos.removeAt(_todos.indexOf(widget.todo));
-            });
+            onDelete();
           },
         ));
   }
-}
-
-class TodoItem extends StatefulWidget {
-  const TodoItem({super.key, required this.todo});
-  final Todo todo;
-
-  @override
-  State<TodoItem> createState() => _TodoItemState();
 }
 
 class ShowTaskPage extends StatefulWidget {
@@ -212,6 +206,11 @@ class _ShowTaskPageState extends State<ShowTaskPage> {
         itemBuilder: (context, index) {
           return TodoItem(
             todo: _todos[index],
+            onDelete: () {
+              setState(() {
+                _todos.removeAt(index);
+              });
+            },
           );
         },
       ),
