@@ -71,30 +71,40 @@ class MyHomePage extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-        backgroundColor: const Color.fromARGB(255, 7, 115, 255),
-      ),
-      body: SingleChildScrollView(
-        child: Column(children: [
-          const Text(
-            'Welcome to the ToDo App!',
+        appBar: AppBar(
+          title: Text(title),
+          backgroundColor: const Color.fromARGB(255, 7, 115, 255),
+        ),
+        body: SingleChildScrollView(
+          child: Center(
+            child: Column(children: [
+              const Text(
+                style: TextStyle(fontSize: 30),
+                'Welcome to the ToDo App!',
+              ),
+              Container(
+                margin: const EdgeInsets.all(50.0),
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(50.0),
+                      backgroundColor: const Color.fromARGB(255, 247, 173, 247),
+                    ),
+                    onPressed: addTask,
+                    child: const Text('Add Task')),
+              ),
+              Container(
+                margin: const EdgeInsets.all(50.0),
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(50.0),
+                      backgroundColor: const Color.fromARGB(255, 247, 173, 247),
+                    ),
+                    onPressed: showTask,
+                    child: const Text('Show Task')),
+              ),
+            ]),
           ),
-          ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 247, 173, 247),
-              ),
-              onPressed: addTask,
-              child: const Text('Add Task')),
-          ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 247, 173, 247),
-              ),
-              onPressed: showTask,
-              child: const Text('Show Task')),
-        ]),
-      ),
-    );
+        ));
   }
 }
 
@@ -113,7 +123,7 @@ class AddTaskPage extends StatelessWidget {
       ),
       body: Center(
         child: Column(children: [
-          const Text('Add a new task here!'),
+          const Text(style: TextStyle(fontSize: 30), 'Add a new task here!'),
           Form(
               child: Column(
             children: [
@@ -129,15 +139,21 @@ class AddTaskPage extends StatelessWidget {
                   labelText: 'Task Description',
                 ),
               ),
-              ElevatedButton(
-                onPressed: () {
-                  addTodo(Todo(
-                    title: _titlecontroller.text,
-                    description: _descriptioncontroller.text,
-                  ));
-                  Navigator.pop(context);
-                },
-                child: const Text('Add Task'),
+              Container(
+                margin: const EdgeInsets.all(50.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.all(20.0),
+                  ),
+                  onPressed: () {
+                    addTodo(Todo(
+                      title: _titlecontroller.text,
+                      description: _descriptioncontroller.text,
+                    ));
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Add Task'),
+                ),
               ),
             ],
           ))
@@ -147,22 +163,43 @@ class AddTaskPage extends StatelessWidget {
   }
 }
 
-class TodoItem extends StatelessWidget {
+class _TodoItemState extends State<TodoItem> {
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+        title: Text(widget.todo.title),
+        subtitle: Text(widget.todo.description),
+        leading: Checkbox(
+          value: false,
+          onChanged: (bool? value) {},
+        ),
+        trailing: IconButton(
+          icon: const Icon(Icons.delete),
+          onPressed: () {
+            //_todos.remove(widget.todo);
+            setState(() {
+              _todos.removeAt(_todos.indexOf(widget.todo));
+            });
+          },
+        ));
+  }
+}
+
+class TodoItem extends StatefulWidget {
   const TodoItem({super.key, required this.todo});
   final Todo todo;
 
   @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(todo.title),
-      subtitle: Text(todo.description),
-    );
-  }
+  State<TodoItem> createState() => _TodoItemState();
 }
 
-class ShowTaskPage extends StatelessWidget {
+class ShowTaskPage extends StatefulWidget {
   const ShowTaskPage({super.key});
+  @override
+  State<ShowTaskPage> createState() => _ShowTaskPageState();
+}
 
+class _ShowTaskPageState extends State<ShowTaskPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -173,9 +210,15 @@ class ShowTaskPage extends StatelessWidget {
       body: ListView.builder(
         itemCount: _todos.length,
         itemBuilder: (context, index) {
-          return TodoItem(todo: _todos[index]);
+          return TodoItem(
+            todo: _todos[index],
+          );
         },
       ),
     );
   }
 }
+
+
+
+// checklist: checkbox, time, deadline
