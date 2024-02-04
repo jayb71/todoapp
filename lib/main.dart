@@ -28,7 +28,10 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.purple,
+          brightness: Brightness.dark,
+        ),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'ToDo App'),
@@ -83,16 +86,19 @@ class MyHomePage extends StatelessWidget {
         body: SingleChildScrollView(
           child: Center(
             child: Column(children: [
-              const Text(
-                style: TextStyle(fontSize: 30),
-                'Welcome to the ToDo App!',
+              Container(
+                margin: const EdgeInsets.fromLTRB(0, 200, 0, 200),
+                child: const Text(
+                  style: TextStyle(fontSize: 30),
+                  'Welcome to the ToDo App!',
+                ),
               ),
               Container(
                 margin: const EdgeInsets.all(50.0),
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.all(50.0),
-                      backgroundColor: const Color.fromARGB(255, 247, 173, 247),
+                      backgroundColor: const Color.fromARGB(255, 43, 10, 43),
                     ),
                     onPressed: addTask,
                     child: const Text('Add Task')),
@@ -102,7 +108,7 @@ class MyHomePage extends StatelessWidget {
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.all(50.0),
-                      backgroundColor: const Color.fromARGB(255, 247, 173, 247),
+                      backgroundColor: const Color.fromARGB(255, 43, 10, 43),
                     ),
                     onPressed: showTask,
                     child: const Text('Show Task')),
