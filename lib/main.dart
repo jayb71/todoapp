@@ -42,10 +42,12 @@ class Todo {
   Todo({
     required this.title,
     required this.description,
+    required this.isDone,
   });
 
   final String title;
   final String description;
+  bool isDone;
 }
 
 void addTodo(Todo todo) {
@@ -149,6 +151,7 @@ class AddTaskPage extends StatelessWidget {
                     addTodo(Todo(
                       title: _titlecontroller.text,
                       description: _descriptioncontroller.text,
+                      isDone: false,
                     ));
                     Navigator.pop(context);
                   },
@@ -164,18 +167,28 @@ class AddTaskPage extends StatelessWidget {
 }
 
 class TodoItem extends StatelessWidget {
-  const TodoItem({super.key, required this.todo, required this.onDelete});
+  const TodoItem(
+      {super.key,
+      required this.todo,
+      required this.onDelete,
+      required this.onCheck});
   final Todo todo;
   final VoidCallback onDelete;
+  final VoidCallback onCheck;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-        title: Text(todo.title),
+        title: Text(todo.title,
+            style: todo.isDone
+                ? const TextStyle(decoration: TextDecoration.lineThrough)
+                : null),
         subtitle: Text(todo.description),
         leading: Checkbox(
-          value: false,
-          onChanged: (bool? value) {},
+          value: todo.isDone,
+          onChanged: (bool? value) {
+            onCheck();
+          },
         ),
         trailing: IconButton(
           icon: const Icon(Icons.delete),
@@ -205,13 +218,17 @@ class _ShowTaskPageState extends State<ShowTaskPage> {
         itemCount: _todos.length,
         itemBuilder: (context, index) {
           return TodoItem(
-            todo: _todos[index],
-            onDelete: () {
-              setState(() {
-                _todos.removeAt(index);
+              todo: _todos[index],
+              onDelete: () {
+                setState(() {
+                  _todos.removeAt(index);
+                });
+              },
+              onCheck: () {
+                setState(() {
+                  _todos[index].isDone = !_todos[index].isDone;
+                });
               });
-            },
-          );
         },
       ),
     );
