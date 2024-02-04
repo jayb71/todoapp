@@ -43,10 +43,12 @@ class Todo {
     required this.title,
     required this.description,
     required this.isDone,
+    required this.deadline,
   });
 
   final String title;
   final String description;
+  final String deadline;
   bool isDone;
 }
 
@@ -54,6 +56,7 @@ void addTodo(Todo todo) {
   _todos.add(todo);
   _titlecontroller.clear();
   _descriptioncontroller.clear();
+  _deadlinecontroller.text = 'null';
 }
 
 class MyHomePage extends StatelessWidget {
@@ -112,6 +115,8 @@ class MyHomePage extends StatelessWidget {
 
 final TextEditingController _titlecontroller = TextEditingController();
 final TextEditingController _descriptioncontroller = TextEditingController();
+final TextEditingController _deadlinecontroller =
+    TextEditingController(text: 'null');
 
 class AddTaskPage extends StatelessWidget {
   const AddTaskPage({super.key});
@@ -141,6 +146,11 @@ class AddTaskPage extends StatelessWidget {
                   labelText: 'Task Description',
                 ),
               ),
+              TextFormField(
+                  controller: _deadlinecontroller,
+                  decoration: const InputDecoration(
+                    labelText: 'Task Deadline',
+                  )),
               Container(
                 margin: const EdgeInsets.all(50.0),
                 child: ElevatedButton(
@@ -151,6 +161,7 @@ class AddTaskPage extends StatelessWidget {
                     addTodo(Todo(
                       title: _titlecontroller.text,
                       description: _descriptioncontroller.text,
+                      deadline: _deadlinecontroller.text,
                       isDone: false,
                     ));
                     Navigator.pop(context);
@@ -183,7 +194,19 @@ class TodoItem extends StatelessWidget {
             style: todo.isDone
                 ? const TextStyle(decoration: TextDecoration.lineThrough)
                 : null),
-        subtitle: Text(todo.description),
+        // subtitle: Text(todo.description),
+        subtitle: Column(
+          children: [
+            Text(todo.description,
+                style: todo.isDone
+                    ? const TextStyle(decoration: TextDecoration.lineThrough)
+                    : null),
+            Text('Deadline: ${todo.deadline}',
+                style: todo.isDone
+                    ? const TextStyle(decoration: TextDecoration.lineThrough)
+                    : null),
+          ],
+        ),
         leading: Checkbox(
           value: todo.isDone,
           onChanged: (bool? value) {
